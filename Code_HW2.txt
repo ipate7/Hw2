@@ -1,0 +1,13 @@
+I ran the script from Instance A (us-central1) to avoid local network restrictions on port 8080.
+
+Latency measurement (IV-A):
+- I sent 10 requests to /register on Instance A and B and recorded per-request round-trip time in milliseconds.
+- I sent 10 requests to /list on Instance A and B and recorded per-request round-trip time in milliseconds.
+- I calculated average latency for each endpoint/instance by summing the 10 timings and dividing by 10.
+
+Eventual consistency (IV-B):
+- I ran a loop for 100 iterations.
+- Each iteration generates a unique username (timestamp + random suffix).
+- The script POSTs /register to Instance A, then immediately GETs /list from Instance B.
+- It checks whether the new username appears in the returned list.
+- It counts the number of iterations where the username was NOT found immediately, and reports that total as replication-lag “misses”.
