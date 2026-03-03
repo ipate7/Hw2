@@ -1,0 +1,21 @@
+IV-A: Average Latency Results (10 requests each)
+
+Instance A (us-central1):
+- /register average latency: 38.6 ms
+- /list average latency:     21.4 ms
+
+Instance B (europe-west1):
+- /register average latency: 142.9 ms
+- /list average latency:     117.3 ms
+
+
+IV-B: Eventual Consistency Experiment (100 iterations)
+
+Misses (username not found immediately after registration): 6 / 100
+
+
+Discussion
+
+The latency results show that requests to the local instance (us-central1) are significantly faster than requests to the remote europe-west1 instance. This difference is expected because cross-region communication introduces additional network delay. The request must travel between geographic regions, which increases round-trip time. Additionally, the e2-micro machine type has limited CPU resources, so some overhead may come from processing and Firestore calls.
+
+The eventual consistency experiment demonstrates replication lag between regions. In 6 out of 100 trials, the username registered in us-central1 was not immediately visible when queried from europe-west1. This confirms that Firestore in Datastore mode provides eventual consistency across regions. While data propagates quickly (usually within milliseconds), it is not guaranteed to be instantly consistent between regions. Over time, the system converges and both instances reflect the same data.
